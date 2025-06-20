@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <!-- 页面标题区域 -->
+    <header>
+        <h1>AI剪纸图案生成器</h1>
+        <p class="subtitle">智能生成剪纸图纸，自动分析剪纸步骤</p>
+    </header>
+    
+    <main class="main-content">
+        <!-- 输入区域：用于输入生成图案的关键词 -->
+        <section class="input-section">
+            <div class="search-box">
+                <input type="text" id="prompt" placeholder="输入关键词，例如：龙、福字、花鸟..." class="search-input">
+                <button onclick="generatePattern()" class="btn btn-primary">生成图案</button>
+            </div>
+            <!-- 错误提示区域 -->
+            <div id="errorMessage" class="error-message" style="display: none;"></div>
+        </section>
+
+        <!-- 结果区域：显示生成的图案和分析的步骤 -->
+        <section id="resultSection" class="result-section" style="display: none;">
+            <!-- 图案显示区域 -->
+            <div class="pattern-box">
+                <h2>生成的图案</h2>
+                <div id="patternImage" class="image-container">
+                    <!-- 加载动画 -->
+                    <div id="patternLoading" class="loading-spinner" style="display: none;">
+                        <div class="spinner"></div>
+                        <p>正在生成图案...</p>
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button onclick="downloadPattern()" class="btn" title="下载图案到本地">下载图案</button>
+                    <button onclick="printPattern()" class="btn" title="打印图案">打印图案</button>
+                </div>
+            </div>
+
+            <!-- 步骤显示区域 -->
+            <div class="steps-box">
+                <h2>剪纸步骤</h2>
+                <div class="button-group">
+                    <button id="toggleViewBtn" onclick="toggleStepsView()" class="btn" title="切换步骤显示方式">切换视图</button>
+                    <button onclick="downloadSteps()" class="btn" title="下载步骤说明">下载步骤</button>
+                </div>
+                <!-- 步骤加载动画 -->
+                <div id="stepsLoading" class="loading-spinner" style="display: none;">
+                    <div class="spinner"></div>
+                    <p>正在分析步骤...</p>
+                </div>
+                <div id="stepsList" class="steps-list"></div>
+            </div>
+        </section>
+
+        <!-- 控制区域：用于控制剪纸方式和硬件操作 -->
+        <section id="controlSection" class="control-section" style="display: none;">
+            <!-- 剪纸方式选择 -->
+            <div class="control-box">
+                <h2>剪纸方式</h2>
+                <div class="radio-group">
+                    <label class="radio-item" title="传统手工剪纸方式">
+                        <input type="radio" name="cuttingMethod" value="manual" checked>
+                        <span>手工剪纸</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- 硬件控制区域 -->
+            <div class="control-box">
+                <h2>硬件控制</h2>
+                <!-- 机器状态显示 -->
+                <div id="machineStatus" class="status-indicator">
+                    <span class="status-dot"></span>
+                    <span class="status-text">未连接</span>
+                </div>
+                <div class="button-group">
+                    <button onclick="startCutting()" class="btn btn-primary" title="开始执行绘制">开始绘制</button>
+                    <button onclick="pauseCutting()" class="btn" disabled title="暂停当前绘制">暂停</button>
+                    <button onclick="stopCutting()" class="btn" disabled title="停止当前绘制">停止</button>
+                </div>
+                <!-- 硬件操作按钮 -->
+                <div class="button-group">
+                    <button onclick="calibrateMachine()" class="btn" title="校准机器">校准机器</button>
+                    <button onclick="testConnection()" class="btn" title="测试机器连接">测试连接</button>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<!-- 错误提示模态框 -->
+<div id="errorModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <h3>错误提示</h3>
+        <p id="errorModalText"></p>
+        <button onclick="closeErrorModal()" class="btn">确定</button>
+    </div>
+</div>
+
+<!-- 确认对话框 -->
+<div id="confirmModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <h3>确认操作</h3>
+        <p id="confirmModalText"></p>
+        <div class="button-group">
+            <button onclick="confirmOperation()" class="btn btn-primary">确认</button>
+            <button onclick="cancelOperation()" class="btn">取消</button>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
